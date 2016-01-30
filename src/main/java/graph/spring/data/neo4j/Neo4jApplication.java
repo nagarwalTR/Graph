@@ -1,6 +1,6 @@
-package movies.spring.data.neo4j;
+package graph.spring.data.neo4j;
 
-import movies.spring.data.neo4j.services.MovieService;
+import graph.spring.data.neo4j.services.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Configuration;
@@ -14,24 +14,23 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author mh
- * @since 06.10.14
+ * @author nagarwal
  */
 @Configuration
 @Import(MyNeo4jConfiguration.class)
 @RestController("/")
-public class SampleMovieApplication extends WebMvcConfigurerAdapter {
+public class Neo4jApplication extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) throws IOException {
-        SpringApplication.run(SampleMovieApplication.class, args);
+        SpringApplication.run(Neo4jApplication.class, args);
     }
 
     @Autowired
-    MovieService movieService;
+    GraphService graphService;
 
     @RequestMapping("/graph")
     public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-        return movieService.graph(limit == null ? 100 : limit);
+        return graphService.graph(limit == null ? 100 : limit);
     }
 
 }

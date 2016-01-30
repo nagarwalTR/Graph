@@ -1,6 +1,6 @@
-package movies.spring.data.neo4j.services;
+package graph.spring.data.neo4j.services;
 
-import movies.spring.data.neo4j.repositories.MovieRepository;
+import graph.spring.data.neo4j.repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.template.Neo4jTemplate;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,9 @@ import java.util.*;
 
 @Service
 @Transactional
-public class MovieService {
+public class GraphService {
 
-    @Autowired MovieRepository movieRepository;
+    @Autowired AuthorRepository authorRepository;
 
     private Map<String, Object> toD3Format(Iterator<Map<String, Object>> result) {
         List<Map<String,Object>> nodes = new ArrayList<Map<String,Object>>();
@@ -20,14 +20,14 @@ public class MovieService {
         int i=0;
         while (result.hasNext()) {
             Map<String, Object> row = result.next();
-            nodes.add(map("title",row.get("movie"),"label","movie"));
+            nodes.add(map("authorId",row.get("author"),"label","authorId"));
             int target=i;
             i++;
             for (Object name : (Collection) row.get("cast")) {
-                Map<String, Object> actor = map("title", name,"label","actor");
-                int source = nodes.indexOf(actor);
+                Map<String, Object> pub = map("publicationId", name,"label","publicationId");
+                int source = nodes.indexOf(pub);
                 if (source == -1) {
-                    nodes.add(actor);
+                    nodes.add(pub);
                     source = i++;
                 }
                 rels.add(map("source",source,"target",target));
@@ -44,7 +44,7 @@ public class MovieService {
     }
 
     public Map<String, Object> graph(int limit) {
-        Iterator<Map<String, Object>> result = movieRepository.graph(limit).iterator();
+        Iterator<Map<String, Object>> result = authorRepository.graph(limit).iterator();
         return toD3Format(result);
     }
 }

@@ -1,4 +1,4 @@
-package movies.spring.data.neo4j;
+package graph.spring.data.neo4j;
 
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -18,21 +18,21 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import(RepositoryRestMvcConfiguration.class)
 @EnableScheduling
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"movies.spring.data.neo4j.services"})
+@ComponentScan(basePackages = {"graph.spring.data.neo4j.services"})
 @Configuration
-@EnableNeo4jRepositories(basePackages = "movies.spring.data.neo4j.repositories")
+@EnableNeo4jRepositories(basePackages = "graph.spring.data.neo4j.repositories")
 public class MyNeo4jConfiguration extends Neo4jConfiguration {
 
     public static final String URL = System.getenv("NEO4J_URL") != null ? System.getenv("NEO4J_URL") : "http://localhost:7474";
 
     @Override
     public Neo4jServer neo4jServer() {
-        return new RemoteServer(URL,"neo4j","movies");
+        return new RemoteServer(URL,"neo4j","graph");
     }
 
     @Override
     public SessionFactory getSessionFactory() {
-        return new SessionFactory("movies.spring.data.neo4j.domain");
+        return new SessionFactory("graph.spring.data.neo4j.domain");
     }
 }
 // end::config[]
