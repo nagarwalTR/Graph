@@ -16,15 +16,18 @@ import java.util.Map;
 // tag::repository[]
 @RepositoryRestResource(collectionResourceRel = "authors", path = "authors")
 public interface AuthorRepository extends GraphRepository<Author> {
-    @Query("MATCH (a:Author) WHERE a.AuthorId = {authorId} RETURN a")
+    @Query("MATCH (a:Author) WHERE a.AuthorId = {authorId} RETURN a LIMIT 50")
     Author findByAuthorId(@Param("authorId") String authorId);
 
     @Query("MATCH (a:Author)-[:AUTHORED_BY]->(p:Publication) WHERE p.PublicationId = {publicationId} RETURN a")
     Collection<Author> findByPublicationId(@Param("publicationId") String publicationId);
 
-    @Query("MATCH (author:Author)-[:AUTHORED_BY]->(p:Publication)<-[:AUTHORED_BY]-(coauthor:Author) WHERE author.AuthorId = {authorId} RETURN coauthor")
+    @Query("MATCH (author:Author)-[:AUTHORED_BY]->(p:Publication)<-[:AUTHORED_BY]-(coauthor:Author) WHERE author.AuthorId = {authorId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthors(@Param("authorId") String authorId);
-    
+
+    @Query("MATCH (o:Publication)<-[:AUTHORED_BY]-(author:Author)-[:AUTHORED_BY]->(p:Publication)<-[:AUTHORED_BY]-(coauthor:Author) WHERE o.PublicationId = {publicationId} RETURN coauthor LIMIT 50")
+    Collection<Author> findCoAuthorsByPublicationId(@Param("publicationId") String publicationId);
+
     @Query("MATCH (a:Author)-[:AUTHORED_BY]->(p:Publication) RETURN a.AuthorId as author, collect(p.PublicationId) as cast LIMIT {limit}")
     List<Map<String,Object>> graph(@Param("limit") int limit);
 }
