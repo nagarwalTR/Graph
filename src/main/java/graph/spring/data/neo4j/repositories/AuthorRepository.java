@@ -9,6 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author nagarwal
@@ -22,8 +23,12 @@ public interface AuthorRepository extends GraphRepository<Author> {
     @Query("MATCH (a:Author)-[:AUTHORED_BY]->(p:Publication) WHERE p.PublicationId = {publicationId} RETURN a")
     Collection<Author> findByPublicationId(@Param("publicationId") String publicationId);
 
-    @Query("MATCH (author:Author)-[:AUTHORED_BY]->(p:Publication)<-[:AUTHORED_BY]-(coauthor:Author) WHERE author.AuthorId = {authorId} RETURN coauthor LIMIT 50")
+    @Query("MATCH (author:Author)-[:AUTHORED_BY*2]-(coauthor:Author) WHERE author.AuthorId = {authorId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthors(@Param("authorId") String authorId);
+
+    // TODO: Need to find out how to translate this into the first order and second order results to be shown correctly
+    @Query("MATCH (author:Author)-[:AUTHORED_BY*2]-(firstOrder:Author),(author:Author)-[:AUTHORED_BY*4]-(secondOrder:Author),(author:Author)-[:AUTHORED_BY*6]-(thirdOrder:Author) WHERE author.AuthorId = {authorId} RETURN DISTINCT firstOrder, secondOrder, thirdOrder LIMIT 50")
+    Collection<Author> findAuthorConnections(@Param("authorId") String authorId);
 
     @Query("MATCH (o:Publication)<-[:AUTHORED_BY]-(author:Author)-[:AUTHORED_BY]->(p:Publication)<-[:AUTHORED_BY]-(coauthor:Author) WHERE o.PublicationId = {publicationId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthorsByPublicationId(@Param("publicationId") String publicationId);
