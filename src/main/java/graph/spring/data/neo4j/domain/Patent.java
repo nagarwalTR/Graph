@@ -22,7 +22,7 @@ public class Patent {
 
     String patentId;
     String title;
-    String publicaitonDate;
+    String publicationDate;
     
     @Relationship(type="PATENT_LITERATURE_CITATION", direction = Relationship.OUTGOING) List<Publication> publications;
 

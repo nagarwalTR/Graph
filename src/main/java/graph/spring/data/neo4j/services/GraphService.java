@@ -14,6 +14,7 @@ public class GraphService {
 
     @Autowired AuthorRepository authorRepository;
 
+    /*
     private Map<String, Object> toD3Format(Iterator<Map<String, Object>> result) {
         List<Map<String,Object>> nodes = new ArrayList<Map<String,Object>>();
         List<Map<String,Object>> rels= new ArrayList<Map<String,Object>>();
@@ -43,8 +44,22 @@ public class GraphService {
         return result;
     }
 
-    public Map<String, Object> graph(int limit) {
+    public Map<String, Object> authorGraph(int limit) {
         Iterator<Map<String, Object>> result = authorRepository.graph(limit).iterator();
         return toD3Format(result);
+    }
+    */
+
+    private List<Map<String, Object>> toResult(Iterator<Map<String, Object>> result) {
+	List<Map<String,Object>> nodes = new ArrayList<Map<String,Object>>();
+	while (result.hasNext()) {
+	    nodes.add(result.next());
+	}
+	return nodes;
+    }
+
+    public List<Map<String, Object>> authorDetails(int limit) {
+	Iterator<Map<String, Object>> result = authorRepository.graph(limit).iterator();
+	return toResult(result);
     }
 }

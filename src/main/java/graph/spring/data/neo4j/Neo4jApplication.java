@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,9 +29,9 @@ public class Neo4jApplication extends WebMvcConfigurerAdapter {
     @Autowired
     GraphService graphService;
 
-    @RequestMapping("/graph")
-    public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-        return graphService.graph(limit == null ? 100 : limit);
+    @RequestMapping("/authorDetails")
+    public List<Map<String, Object>> authorDetails(@RequestParam(value = "limit",required = false) Integer limit) {
+        return graphService.authorDetails(limit == null ? 100 : limit);
     }
 
 }
