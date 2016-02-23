@@ -30,7 +30,7 @@ public interface AuthorRepository extends GraphRepository<Author> {
     @Query("MATCH (o:Publication)-[:AUTHORED_BY]->(author:Author)<-[:AUTHORED_BY]-(p:Publication)-[:AUTHORED_BY]->(coauthor:Author) WHERE o.PublicationId = {publicationId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthorsByPublicationId(@Param("publicationId") String publicationId);
 
-    @Query("MATCH (a:Author)<-[:AUTHORED_BY]-(p:Publication) RETURN a.AuthorId AS author, p LIMIT {limit}")
+    @Query("MATCH (grant:Grant)<-[:AUTHOR_RECD_GRANT]-(a:Author)<-[:AUTHORED_BY]-(publication:Publication) RETURN a.AuthorId AS author, publication, grant LIMIT {limit}")
     List<Map<String,Object>> graph(@Param("limit") int limit);
 }
 // end::repository[]
