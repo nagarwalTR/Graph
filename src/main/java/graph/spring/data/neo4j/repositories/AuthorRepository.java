@@ -17,23 +17,20 @@ import java.util.Set;
 // tag::repository[]
 @RepositoryRestResource(collectionResourceRel = "authors", path = "authors")
 public interface AuthorRepository extends GraphRepository<Author> {
+    // TODO: This should return all author info, including links -- similar to how we get it in /authors/
     @Query("MATCH (a:Author) WHERE a.AuthorId = {authorId} RETURN a LIMIT 50")
     Author findByAuthorId(@Param("authorId") String authorId);
 
-    @Query("MATCH (a:Author)-[:AUTHORED_BY]->(p:Publication) WHERE p.PublicationId = {publicationId} RETURN a")
+    @Query("MATCH (a:Author)<-[:AUTHORED_BY]-(p:Publication) WHERE p.PublicationId = {publicationId} RETURN a")
     Collection<Author> findByPublicationId(@Param("publicationId") String publicationId);
 
     @Query("MATCH (author:Author)-[:AUTHORED_BY*2]-(coauthor:Author) WHERE author.AuthorId = {authorId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthors(@Param("authorId") String authorId);
 
-    // TODO: Need to find out how to translate this into the first order and second order results to be shown correctly
-    @Query("MATCH (author:Author)-[:AUTHORED_BY*2]-(firstOrder:Author),(author:Author)-[:AUTHORED_BY*4]-(secondOrder:Author),(author:Author)-[:AUTHORED_BY*6]-(thirdOrder:Author) WHERE author.AuthorId = {authorId} RETURN DISTINCT firstOrder, secondOrder, thirdOrder LIMIT 50")
-    Collection<Author> findAuthorConnections(@Param("authorId") String authorId);
-
-    @Query("MATCH (o:Publication)<-[:AUTHORED_BY]-(author:Author)-[:AUTHORED_BY]->(p:Publication)<-[:AUTHORED_BY]-(coauthor:Author) WHERE o.PublicationId = {publicationId} RETURN coauthor LIMIT 50")
+    @Query("MATCH (o:Publication)-[:AUTHORED_BY]->(author:Author)<-[:AUTHORED_BY]-(p:Publication)-[:AUTHORED_BY]->(coauthor:Author) WHERE o.PublicationId = {publicationId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthorsByPublicationId(@Param("publicationId") String publicationId);
 
-    @Query("MATCH (a:Author)-[:AUTHORED_BY]->(p:Publication) RETURN a.AuthorId as author, collect(p.PublicationId) as cast LIMIT {limit}")
+    @Query("MATCH (a:Author)<-[:AUTHORED_BY]-(p:Publication) RETURN a.AuthorId as author, collect(p.PublicationId) as cast LIMIT {limit}")
     List<Map<String,Object>> graph(@Param("limit") int limit);
 }
 // end::repository[]

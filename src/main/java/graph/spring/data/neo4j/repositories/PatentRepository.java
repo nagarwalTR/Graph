@@ -20,7 +20,7 @@ public interface PatentRepository extends GraphRepository<Patent> {
     @Query("MATCH (p:Patent) USING INDEX p:Patent(PatentId) WHERE p.PatentId = {patentId} RETURN p LIMIT 50")
     Patent findByPatentId(@Param("patentId") String patentId);
 
-    @Query("MATCH (a:Author)-[:AUTHORED_BY]->(p:Publication)<-[:LITERATURE_PATENT_CITATION]-(pa:Patent) USING INDEX pa:Patent(PatentId) WHERE pa.PatentId = {patentId} RETURN a LIMIT 50")
+    @Query("MATCH (a:Author)<-[:AUTHORED_BY]-(p:Publication)<-[:PATENT_LITERATURE_CITATION]-(pa:Patent) USING INDEX pa:Patent(PatentId) WHERE pa.PatentId = {patentId} RETURN a LIMIT 50")
     Collection<Author> findPatentRefAuthors(@Param("patentId") String patentId);
 }
 // end::repository[]

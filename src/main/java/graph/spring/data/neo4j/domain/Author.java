@@ -21,11 +21,13 @@ public class Author {
     @GraphId Long id;
 
     String authorId;
-    //    String DaisId;
-    //String ResearcherId;
-    //String OrcId;
+    String daisId;
+    String researcherId;
+    String orcId;
+    String fullName;
 
-    @Relationship(type="AUTHORED_BY", direction = Relationship.OUTGOING) List<Publication> publications;
+    @Relationship(type="AUTHORED_BY", direction = Relationship.INCOMING) List<Publication> publications;
+    @Relationship(type="AUTHOR_RECD_GRANT", direction = Relationship.OUTGOING) List<Grant> grants;
 
 // end::author[]
 
@@ -35,13 +37,27 @@ public class Author {
         return authorId;
     }
 
-    /*
-    public String getResearcherId() {
-        return ResearcherId;
+    public String getDaisId() {
+        return daisId;
     }
-    */
+
+    public String getResearcherId() {
+        return researcherId;
+    }
+
+    public String getOrcId() {
+        return orcId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
 
     public Collection<Publication> getPublications() {
         return publications;
+    }
+
+    public Collection<Grant> getGrants() {
+        return grants;
     }
 }

@@ -15,34 +15,28 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 //@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 @JsonIdentityInfo(generator=JSOGGenerator.class)
 @JsonInclude(Include.NON_NULL)
-// tag::patent[]
+// tag::grant[]
 @NodeEntity
-public class Patent {
+public class Grant {
     @GraphId Long id;
 
-    String patentId;
-    String title;
-    String publicaitonDate;
+    String grantId;
+    String organization;
+    String grantNumber;
     
-    @Relationship(type="PATENT_LITERATURE_CITATION", direction = Relationship.OUTGOING) List<Publication> publications;
+// end::grant[]
 
-// end::patent[]
+    public Grant() { }
 
-    public Patent() { }
-
-    public String getPatentId() {
-	return patentId;
+    public String getGrantId() {
+	return grantId;
     }
     
-    public String getTitle() {
-	return title;
+    public String getOrganization() {
+	return organization;
     }
     
-    public String getPublicationDate() {
-	return publicationDate;
-    }
-    
-    public Collection<Publication> getPublications() {
-        return publications;
+    public String getGrantNumber() {
+	return grantNumber;
     }
 }
