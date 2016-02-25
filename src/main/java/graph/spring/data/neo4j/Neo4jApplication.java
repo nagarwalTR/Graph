@@ -1,5 +1,6 @@
 package graph.spring.data.neo4j;
 
+import graph.spring.data.neo4j.services.AuthorService;
 import graph.spring.data.neo4j.services.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -29,9 +30,22 @@ public class Neo4jApplication extends WebMvcConfigurerAdapter {
     @Autowired
     GraphService graphService;
 
-    @RequestMapping("/authorDetails")
+    @RequestMapping("/authorDeets")
     public List<Map<String, Object>> authorDetails(@RequestParam(value = "limit",required = false) Integer limit) {
         return graphService.authorDetails(limit == null ? 100 : limit);
     }
 
+    @Autowired
+    AuthorService authorService;
+
+    @RequestMapping("/authorDetails")
+    public List<Map<String, Object>> authorDetails(@RequestParam(value = "authorId") String authorId) {
+        return authorService.authorDetails(authorId);
+    }
+
+    @RequestMapping("/authorConnections")
+    public Map<String, Object> authorConnections(@RequestParam(value = "limit",required = false) Integer limit,
+						 @RequestParam(value = "authorId") String authorId) {
+        return authorService.authorConnections(authorId, (limit == null ? 10 : limit));
+    }
 }

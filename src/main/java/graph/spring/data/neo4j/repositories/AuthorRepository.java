@@ -30,8 +30,18 @@ public interface AuthorRepository extends GraphRepository<Author> {
     @Query("MATCH (o:Publication)-[:AUTHORED_BY]->(author:Author)<-[:AUTHORED_BY]-(p:Publication)-[:AUTHORED_BY]->(coauthor:Author) WHERE o.PublicationId = {publicationId} RETURN coauthor LIMIT 50")
     Collection<Author> findCoAuthorsByPublicationId(@Param("publicationId") String publicationId);
 
-    @Query("MATCH (grant:Grant)<-[:AUTHOR_RECD_GRANT]-(a:Author)<-[:AUTHORED_BY]-(publication:Publication) RETURN a.AuthorId AS author, publication, grant LIMIT {limit}")
-    List<Map<String,Object>> graph(@Param("limit") int limit);
+    // Queries used by the Service and not meant to be called directly from this repository
+    @Query("MATCH (grant:Grant)<-[:AUTHOR_RECD_GRANT]-(a:Author)<-[:AUTHORED_BY]-(publication:Publication) WHERE a.AuthorId = {authorId} RETURN a.AuthorId AS author, publication, grant")
+    List<Map<String,Object>> authorDetails(@Param("authorId") String authorId);
+
+    @Query("MATCH (author:Author)-[:AUTHORED_BY*2]-(firstOrder:Author) WHERE author.AuthorId = {authorId} RETURN DISTINCT firstOrder LIMIT {limit}")
+    Collection<Author> firstOrderConn(@Param("authorId") String authorId, @Param("limit") int limit);
+
+    @Query("MATCH (author:Author)-[:AUTHORED_BY*4]-(secondOrder:Author) WHERE author.AuthorId = {authorId} RETURN DISTINCT secondOrder LIMIT {limit}")
+    Collection<Author> secondOrderConn(@Param("authorId") String authorId, @Param("limit") int limit);
+
+    @Query("MATCH (author:Author)-[:AUTHORED_BY*6]-(thirdOrder:Author) WHERE author.AuthorId = {authorId} RETURN DISTINCT thirdOrder LIMIT {limit}")
+    Collection<Author> thirdOrderConn(@Param("authorId") String authorId, @Param("limit") int limit);
 }
 // end::repository[]
 
