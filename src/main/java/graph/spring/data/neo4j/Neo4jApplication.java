@@ -1,7 +1,6 @@
 package graph.spring.data.neo4j;
 
 import graph.spring.data.neo4j.services.AuthorService;
-import graph.spring.data.neo4j.services.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Configuration;
@@ -25,14 +24,6 @@ public class Neo4jApplication extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(Neo4jApplication.class, args);
-    }
-
-    @Autowired
-    GraphService graphService;
-
-    @RequestMapping("/authorDeets")
-    public List<Map<String, Object>> authorDetails(@RequestParam(value = "limit",required = false) Integer limit) {
-        return graphService.authorDetails(limit == null ? 100 : limit);
     }
 
     @Autowired
