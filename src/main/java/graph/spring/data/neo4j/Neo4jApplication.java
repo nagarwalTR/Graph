@@ -1,6 +1,7 @@
 package graph.spring.data.neo4j;
 
 import graph.spring.data.neo4j.services.AuthorService;
+import graph.spring.data.neo4j.services.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,9 @@ public class Neo4jApplication extends WebMvcConfigurerAdapter {
     @Autowired
     AuthorService authorService;
 
+    @Autowired
+    PublicationService publicationService;
+
     @RequestMapping("/authorDetails")
     public List<Map<String, Object>> authorDetails(@RequestParam(value = "authorId") String authorId) {
         return authorService.authorDetails(authorId);
@@ -38,5 +42,10 @@ public class Neo4jApplication extends WebMvcConfigurerAdapter {
     public Map<String, Object> authorConnections(@RequestParam(value = "limit",required = false) Integer limit,
 						 @RequestParam(value = "authorId") String authorId) {
         return authorService.authorConnections(authorId, (limit == null ? 10 : limit));
+    }
+
+    @RequestMapping("/publicationDetails")
+    public List<Map<String, Object>> publicationDetails(@RequestParam(value = "publicationId") String publicationId) {
+        return publicationService.publicationDetails(publicationId);
     }
 }
